@@ -2,11 +2,12 @@
 ## Authors: Rowan Moody & Brandon Shafer
 Repository for the Zambia Growing Season final project, Spring 2020.
 
-Project Breakdown:
-Data import and preprocessessing - Brandon
+### Project Breakdown:
 
-Initial analysis (mean over seasons) - Brandon
+  Data import and preprocessessing - Brandon
 
-2 step mask to fix >365 values in outputs - Rowan
+  Initial analysis (mean over seasons) - Brandon
 
-Preliminary maps (means by cell, mean by distict?) - Rowan
+  2 step mask to fix >365 values in outputs - Rowan
+
+  Preliminary maps (means by cell, mean by distict?) - Rowan
