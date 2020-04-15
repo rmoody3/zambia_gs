@@ -16,28 +16,60 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 #library(zambiags)
+library(dplyr)
 library(geospaar)
 ```
 
 
 ```{r}
 #import season srtart files
-ss_filelist <- list.files("extdata/season_planting_date_30perc", full.names = TRUE)
+ss_filelist <- list.files("external/data/season_planting_date_30perc", full.names = TRUE)
 
 ss_rasterfiles <- lapply(ss_filelist, FUN = raster, use.names = TRUE)
 
 season_start_stack <- stack(ss_rasterfiles)
+#ss_brick <- brick(ss_rasterfiles)
 ```
 
 ```{r}
 #import season end files
-se_filelist <- list.files("extdata/season_end_30perc", full.names = TRUE)
+se_filelist <- list.files("external/data/season_end_30perc", full.names = TRUE)
 
 se_rasterfiles <- lapply(se_filelist, FUN = raster, use.names = TRUE)
 
 season_end_stack <- stack(se_rasterfiles)
 ```
 
+```{r}
+#season_start_stack[[1]]
+#plot_noaxes(season_start_stack[[1]])
+#plot_noaxes(season_end_stack[[1]])
+```
+
+```{r}
+#load mask
+#data("crop_mask")
+crop_mask
+plot_noaxes(crop_mask)
+```
 
 
+Mask season start
+```{r}
+season_start_stack %>% mask(., crop_mask)
+```
+
+
+For after analysis
+```{r}
+ss_mean <- raster(season_start_stack[[1]])
+
+  
+ss_values <- raster::getValues(season_start_stack)
+raster::cellStats(season_start_stack, mean)
+
+?raster::cellStats
+
+plot_noaxes(ss1)
+```
 
