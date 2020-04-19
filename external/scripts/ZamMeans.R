@@ -29,6 +29,8 @@ plant_rasnegative <- (plant_mean > 365) * -365
 plant_mean_corrected <- plant_mean + plant_rasnegative
 harv_rasnegative <- (harv_mean > 365) * -365
 harv_mean_corrected <- harv_mean + harv_rasnegative
+#save(plant_mean_corrected, file = "C:/Users/Rowan/Documents/R/zambiags/data/plant_mean_corrected")
+#save(harv_mean_corrected, file = "C:/Users/Rowan/Documents/R/zambiags/data/harv_mean_corrected")
 
 #Plot Zambia mean planting and harvest dates
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
@@ -54,6 +56,8 @@ distr_plmu <- plant_zonemu %>% data.frame %>% select(1:2) %>%
   subs(x = distsr_rs, y = ., by = "zone")
 distr_hamu <- harv_zonemu %>% data.frame %>% select(1:2) %>%
   subs(x = distsr_rs, y = ., by = "zone")
+#save(distr_plmu, file = "C:/Users/Rowan/Documents/R/zambiags/data/distr_plmu.rda")
+#save(distr_hamu, file = "C:/Users/Rowan/Documents/R/zambiags/data/distr_hamu.rda")
 
 #Plot mean planting/harvest dates by district
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 6))

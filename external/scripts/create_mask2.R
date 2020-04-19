@@ -55,5 +55,9 @@ harv_zonemu <- zonal(x = harv_mean_corrected, z = distsr_rs, fun = "mean")
 
 distr_plmu <- plant_zonemu %>% data.frame %>% select(1:2) %>%
   subs(x = distsr_rs, y = ., by = "zone")
-#distr_hamu <- harv_zonemu %>% data.frame %>% select(1:2) %>%
-#  subs(x = distsr_rs, y = ., by = "zone")
+distr_hamu <- harv_zonemu %>% data.frame %>% select(1:2) %>%
+  subs(x = distsr_rs, y = ., by = "zone")
+
+plot_noaxes(distr_plmu)
+plot_noaxes(distr_hamu)
+
