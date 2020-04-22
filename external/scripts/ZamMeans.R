@@ -1,28 +1,40 @@
 library(geospaar)
 
 #Load data
-
-#maskr_new <- raster("external/data/ZAM_crsipCrop_2015_b1.tif")
-plant <- dir("external/data/phenology/season_planting_date_30perc/", full.names = TRUE)
+plant <- dir("external/data/phenology/season_planting_date_30perc/",
+             full.names = TRUE)
 harv <- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
 data("crop_mask")
-districts <- system.file("extdata/districts.shp", package = "geospaar") %>%
+districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
   st_read
 
-
 #Convert to raster and stack
-plant_ras <- lapply(plant, raster)
+#plant_ras <- lapply(plant, raster)
+plant_ras <- lapply(plant, function(x) {
+  r <- raster(x)
+  r[r < 0] <- NA
+  return(r)
+})
 plant_stack <- stack(plant_ras)
-harv_ras <- lapply(harv, raster)
+
+#harv_ras <- lapply(harv, raster)
+harv_ras <- lapply(harv, function(x) {
+  r <- raster(x)
+  r[r < 0] <- NA
+  return(r)
+})
 harv_stack <- stack(harv_ras)
 
 #Mask to cropland area
 plant_masked2 <- mask(x = plant_stack, mask = crop_mask)
 harv_masked2 <- mask(x = harv_stack, mask = crop_mask)
+#save(plant_masked2, file = "C:/Users/Rowan/Documents/R/zambiags/data/plant_masked2.rda")
+#save(harv_masked2, file = "C:/Users/Rowan/Documents/R/zambiags/data/harv_masked2.rda")
 
 #Calculate mean planting and harvest dates across seasons
 plant_mean <- plant_masked2 %>% calc(., mean)
 harv_mean <- harv_masked2 %>% calc(., mean)
+
 
 #Correct for multiyear season dates
 plant_rasnegative <- (plant_mean > 365) * -365
@@ -34,11 +46,12 @@ harv_mean_corrected <- harv_mean + harv_rasnegative
 
 #Plot Zambia mean planting and harvest dates
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
-plot(st_geometry(districts), col = "lightgrey", reset = FALSE, main = "Mean Planting Date")
-plot(plant_mean_corrected, axes = FALSE, box = FALSE, legend = FALSE, add = TRUE)
-plot(st_geometry(districts), col = "lightgrey", reset = FALSE, main = "Mean Harvesting Date")
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Planting Date")
+plot(plant_mean_corrected, axes = FALSE, box = FALSE, add = TRUE)
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Harvesting Date")
 plot(harv_mean_corrected, axes = FALSE, box = FALSE, add = TRUE)
-
 #Zonal Statistics by Districts
 #Import district data, rasterize, and resample to planting/harvest data extent
 zamr <- raster(x = extent(districts), crs = crs(districts), res = 0.1)
@@ -62,6 +75,6 @@ distr_hamu <- harv_zonemu %>% data.frame %>% select(1:2) %>%
 #Plot mean planting/harvest dates by district
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 6))
 plot(distr_plmu, main = "Mean Planting Date",
-     axes = FALSE, box = FALSE)
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
 plot(distr_hamu, main = "Mean Harvesting Date",
-     axes = FALSE, box = FALSE)
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
