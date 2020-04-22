@@ -10,31 +10,40 @@ districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
 
 #Convert to raster and stack
 #plant_ras <- lapply(plant, raster)
-plant_ras <- lapply(plant, function(x) {
+plant_ras <- lapply(plant, function(x) {  # x <- 1
   r <- raster(x)
   r[r < 0] <- NA
+  r <- mask(x = r, mask = crop_mask)
+  # plot(r)
   return(r)
 })
-plant_stack <- stack(plant_ras)
+plant_stack <- brick(plant_ras)
 
 #harv_ras <- lapply(harv, raster)
 harv_ras <- lapply(harv, function(x) {
   r <- raster(x)
   r[r < 0] <- NA
+  r <- mask(x = r, mask = crop_mask)
   return(r)
 })
-harv_stack <- stack(harv_ras)
+harv_stack <- brick(harv_ras)
 
 #Mask to cropland area
-plant_masked2 <- mask(x = plant_stack, mask = crop_mask)
-harv_masked2 <- mask(x = harv_stack, mask = crop_mask)
-#save(plant_masked2, file = "C:/Users/Rowan/Documents/R/zambiags/data/plant_masked2.rda")
-#save(harv_masked2, file = "C:/Users/Rowan/Documents/R/zambiags/data/harv_masked2.rda")
+# plant_masked2 <- mask(x = plant_stack, mask = crop_mask)
+# harv_masked2 <- mask(x = harv_stack, mask = crop_mask)
+# save(plant_masked2, file = "data/plant_masked2.rda")
+# save(harv_masked2, file = "data/harv_masked2.rda")
 
+# new script after building package
 #Calculate mean planting and harvest dates across seasons
-plant_mean <- plant_masked2 %>% calc(., mean)
-harv_mean <- harv_masked2 %>% calc(., mean)
+library(zambiags)
+data("plant_ras")
+plant_mean <- plant_ras %>% calc(., mean)
+rm(plant_ras)
 
+data("harv_ras")
+harv_mean <- harv_ras %>% calc(., mean)
+rm(harv_ras)
 
 #Correct for multiyear season dates
 plant_rasnegative <- (plant_mean > 365) * -365
