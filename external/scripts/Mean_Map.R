@@ -2,12 +2,12 @@
 # new script after building package
 #Calculate mean planting and harvest dates across seasons
 library(zambiags)
-data("plant_ras")
-plant_mean <- plant_ras %>% calc(., mean)
+plantbrick <- brick("external/data/plantbrick.tif")
+plant_mean <- plantbrick %>% calc(., mean)
 rm(plant_ras)
 
-data("harv_ras")
-harv_mean <- harv_ras %>% calc(., mean)
+harvbrick <- brick("external/data/harvestbrick.tif")
+harv_mean <-  harvbrick %>% calc(., mean)
 rm(harv_ras)
 
 #Correct for multiyear season dates

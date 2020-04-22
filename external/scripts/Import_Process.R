@@ -9,6 +9,7 @@ harv <- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
 data("crop_mask")
 districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
   st_read
+crop_mask[crop_mask == 0] <- NA
 
 #Convert to raster and stack
 #plant_ras <- lapply(plant, raster)
@@ -19,8 +20,10 @@ plant_ras <- lapply(plant, function(x) {  # x <- 1
   # plot(r)
   return(r)
 })
+plant_ras <- stack(plant_ras)
+
 if(!canProcessInMemory(plant_ras)) {
-  plantbrick <- brick(plant_ras, filename = "external/data/plantbrick.tif")
+  plantbrick <- brick(x = plant_ras, filename = "external/data/plantbrick.tif")
 } else {
   plantbrick <- brick(plant_ras)
   save(plantbrick, file = "data/plantbrick.rda")
@@ -34,6 +37,8 @@ harv_ras <- lapply(harv, function(x) {
   r <- mask(x = r, mask = crop_mask)
   return(r)
 })
+harv_ras <- stack(harv_ras)
+
 if(!canProcessInMemory(harv_ras)) {
   harvestbrick <- brick(harv_ras, filename = "external/data/harvestbrick.tif")
 } else {
