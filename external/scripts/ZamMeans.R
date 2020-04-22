@@ -1,3 +1,5 @@
+
+## This is one script
 library(geospaar)
 
 #Load data
@@ -17,7 +19,13 @@ plant_ras <- lapply(plant, function(x) {  # x <- 1
   # plot(r)
   return(r)
 })
-plant_stack <- brick(plant_ras)
+if(!canProcessInMemory(plant_ras)) {
+  plantbrick <- brick(plant_ras, filename = "external/data/plantbrick.tif")
+} else {
+  plantbrick <- brick(plant_ras)
+  save(plantbrick, file = "data/plantbrick.rda")
+}
+
 
 #harv_ras <- lapply(harv, raster)
 harv_ras <- lapply(harv, function(x) {
@@ -26,7 +34,12 @@ harv_ras <- lapply(harv, function(x) {
   r <- mask(x = r, mask = crop_mask)
   return(r)
 })
-harv_stack <- brick(harv_ras)
+if(!canProcessInMemory(harv_ras)) {
+  harvestbrick <- brick(harv_ras, filename = "external/data/harvestbrick.tif")
+} else {
+  harvestbrick <- brick(harv_ras)
+  save(harvestbrick, file = "data/harvestbrick.rda")
+}
 
 #Mask to cropland area
 # plant_masked2 <- mask(x = plant_stack, mask = crop_mask)
@@ -34,6 +47,7 @@ harv_stack <- brick(harv_ras)
 # save(plant_masked2, file = "data/plant_masked2.rda")
 # save(harv_masked2, file = "data/harv_masked2.rda")
 
+## This is a separate script
 # new script after building package
 #Calculate mean planting and harvest dates across seasons
 library(zambiags)
