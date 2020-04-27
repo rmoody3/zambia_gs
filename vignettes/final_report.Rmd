@@ -1,0 +1,93 @@
+---
+title: "Final Report"
+author: "Brandon Shafer"
+date: "4/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction
+  The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the intustry. In Zambia, we are looking at the planting and harvesting dates for maize in order to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. Through the analysis of 18 seasons we calculate the mean harvesting and planting dates as well as the mean season length, averaging the 18 seasons by pixel (`sentence could be worded better`). 
+
+# Methods
+### Import Data
+  Our data came from three different sources. Our districts data came from Lyndon in the geospaar package. Our crop_mask data came from the plantingdatecv repository in the agroimpacts group. Our phenology data for Zambia came from Sitian Xiong, where the planting and harvesting dates were calculated when the ndvi reached 30% of the maximum ndvi for the season.
+
+```{r, eval=FALSE}
+districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
+  st_read
+
+plant <- dir("external/data/phenology/season_planting_date_30perc/",
+             full.names = TRUE)
+harv <- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
+
+maskr <- dir("external/data/cropland/", pattern = ".tif", full.names = TRUE)
+```
+
+
+### Pre-processing
+  The districts data did not need much pre-processing, as it was already in a good format and was only used for a background for displaying the other data. We did rasterize the districts data later on in order to look at district means for the data.
+
+  The mask data required a bit of preprocessing (`finish once we re-create the crop mask`)
+```{r, eval=FALSE}
+
+```
+
+
+  The planting and harvesting data did require a fair amount of pre-processing, especially given the size of the files. We took in the files as a list of file paths and then through an `lapply` statement, we rasterized each file, turned the 0 values into NA values, masked the data to the cropland areas, and then put each file into a stack. These stacks were then saved as TIFF files for easy access during the analysis.
+```{r, eval=FALSE}
+#plant_ras <- lapply(plant, raster)
+plant_ras <- lapply(plant, function(x) {  # x <- 1
+  r <- raster(x)
+  r[r < 0] <- NA
+  r <- mask(x = r, mask = crop_mask)
+  # plot(r)
+  return(r)
+})
+plant_ras <- stack(plant_ras)
+
+if(!canProcessInMemory(plant_ras)) {
+  plantbrick <- brick(x = plant_ras, filename = "external/data/plantbrick.tif")
+} else {
+  plantbrick <- brick(plant_ras)
+  save(plantbrick, file = "data/plantbrick.rda")
+}
+
+
+#harv_ras <- lapply(harv, raster)
+harv_ras <- lapply(harv, function(x) {
+  r <- raster(x)
+  r[r < 0] <- NA
+  r <- mask(x = r, mask = crop_mask)
+  return(r)
+})
+harv_ras <- stack(harv_ras)
+
+if(!canProcessInMemory(harv_ras)) {
+  harvestbrick <- brick(harv_ras, filename = "external/data/harvestbrick.tif")
+} else {
+  harvestbrick <- brick(harv_ras)
+  save(harvestbrick, file = "data/harvestbrick.rda")
+}
+```
+
+
+### Planting and Harvesting Mean Analysis
+  
+
+### Season Length Mean Analysis
+
+# Results
+### Planting and Harvesting Mean
+
+### Season Length Mean
+
+# Discussion
+
+
+
+
