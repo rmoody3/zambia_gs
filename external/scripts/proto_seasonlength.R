@@ -20,6 +20,7 @@ season_lng_dist <- distr_plmu - distr_hamu
 #     file = "C:/Users/Rowan/Documents/R/zambiags/data/season_lng_dist.rda")
 
 data("season_lng_dist")
-  plot_noaxes(season_lng_dist, main = "Mean Season Length",
+
+plot_noaxes(season_lng_dist, main = "Mean Season Length",
               axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
   #plot(season_lng_pt_abs, axes = FALSE, box = FALSE, add = TRUE)
