@@ -4,8 +4,9 @@ districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
   st_read
 plantbrick <- brick("external/data/plantbrick.tif")
 harvbrick <- brick("external/data/harvestbrick.tif")
+
 # overlay function for large raster bricks
-slength <- overlay((365 + harvbrick), plantbrick,
+slength <- overlay(harvbrick, plantbrick,
                    fun = function(b1, b2){return(b1 - b2)})
 slength_mean <- slength %>% calc(., mean)
 
