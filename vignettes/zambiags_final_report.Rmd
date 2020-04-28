@@ -1,8 +1,12 @@
 ---
-title: "Final Report"
+title: "Zambia Growing Season: Final Report"
 author: "Rowan Moody & Brandon Shafer"
-date: "4/27/2020"
-output: html_document
+date: "4/28/2020"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{zambiags_final_report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -170,7 +174,5 @@ plot(distr_slmu, main = "Mean Season Length",
 ![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](C:/Users/Rowan/Documents/R/zambiags/images/slength_dist.png)
 
 # Discussion (200-400 words)
-
-
 
 
