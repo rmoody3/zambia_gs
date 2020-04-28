@@ -1,11 +1,16 @@
 Package: zambiags
-Title: What the Package Does (One Line, Title Case)
+Title: Package for Agroimpacts analysis of Zambia's growing season
 Version: 0.0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Rowan",
+           family = "Moody",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "rmoody@clarku.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person(given = "Brandon",
+           family = "Shafer",
+           role = c("aut", "cre"),
+           email = "bshafer@clarku.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
 License: What license it uses
