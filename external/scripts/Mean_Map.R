@@ -31,10 +31,12 @@ data("harv_mean_corrected")
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
 plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
      main = "Mean Planting Date")
-plot(plant_mean_corrected, axes = FALSE, box = FALSE, add = TRUE)
+plot(plant_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
 plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
      main = "Mean Harvesting Date")
-plot(harv_mean_corrected, axes = FALSE, box = FALSE, add = TRUE)
+plot(harv_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
 
 #Zonal Statistics by Districts
 #Import district data, rasterize, and resample to planting/harvest data extent

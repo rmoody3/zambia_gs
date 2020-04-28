@@ -11,9 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 # Introduction (200-400 words)
-The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for cropland area in order across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. 
-
-Through the analysis of eighteen seasons we calculate the mean harvesting and planting dates as well as the mean season length, averaging the 18 seasons by pixel (`sentence could be worded better`). 
+The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for cropland area in order across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. Through the analysis of eighteen seasons we calculate the mean harvesting and planting dates as well as the mean season length, averaging the eighteen seasons by pixel and aggregating them by Zambia's districts.
 
 # Methods (~250 words)
 ### Import Data
@@ -137,11 +135,14 @@ distr_slmu <- slength_zonemu %>% data.frame %>% select(1:2) %>%
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
 plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
      main = "Mean Planting Date")
-plot(plant_mean_corrected, axes = FALSE, box = FALSE, add = TRUE)
+plot(plant_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
 plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
      main = "Mean Harvesting Date")
-plot(harv_mean_corrected, axes = FALSE, box = FALSE, add = TRUE)
+plot(harv_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
 ```
+![Figure 1: This image shows the mean planting and harvesting dates between 2000 and 2018 in Zambia.](C:/Users/Rowan/Documents/R/zambiags/images/datemeans.png)
 
 ```{r, eval = FALSE}
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 6))
@@ -150,6 +151,7 @@ plot(distr_plmu, main = "Mean Planting Date",
 plot(distr_hamu, main = "Mean Harvesting Date",
      axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
 ```
+![Figure 2: This image shows the mean planting and harvesting dates for each district in Zambia between 2000 and 2018.](C:/Users/Rowan/Documents/R/zambiags/images/distr_datemeans.png)
 
 ### Season Length Mean
 
@@ -157,7 +159,8 @@ plot(distr_hamu, main = "Mean Harvesting Date",
 par(mfrow = c(1, 1), mar = c(0, 2, 1, 5))
 plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
      main = "Mean Season Length")
-plot(slength_mean, axes = FALSE, box = FALSE, add = TRUE)
+plot(slength_mean, axes = FALSE, box = FALSE, 
+     add = TRUE, col = rev(terrain.colors(10))))
 ```
 
 ```{r, eval = FALSE}
