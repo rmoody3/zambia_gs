@@ -10,12 +10,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Introduction
-  The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the intustry. In Zambia, we are looking at the planting and harvesting dates for maize in order to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. Through the analysis of 18 seasons we calculate the mean harvesting and planting dates as well as the mean season length, averaging the 18 seasons by pixel (`sentence could be worded better`). 
+# Introduction (200-400 words)
+The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for cropland area in order across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. 
 
-# Methods
+Through the analysis of eighteen seasons we calculate the mean harvesting and planting dates as well as the mean season length, averaging the 18 seasons by pixel (`sentence could be worded better`). 
+
+# Methods (~250 words)
 ### Import Data
-  Our data was acquired from three different sources. Our districts data came from our professor, Lyndon Estes via the Geospaar package. Our crop_mask data came from the plantingdatecv repository in the previous year's agroimpacts group. Our phenology data for Zambia came from Sitian Xiong, where the planting dates were calculated when the ndvi reached 30% of the maximum ndvi for the season, and harvesting dates when the ndvi decreased 70% from the the maximum ndvi for the season.
+Our data was acquired from three different sources. Our districts data came from our professor, Lyndon Estes, via the Geospaar package. Our crop_mask data came from the plantingdatecv repository in the previous year's agroimpacts group. Our phenology data for Zambia came from Sitian Xiong,contaniing 18 seasons of data from the years of 2000 to 2018.  The planting dates were calculated when the NDVI curve reached 30% of the maximum NDVI for the season, and harvesting dates when the NDVI curve decreased 70% from the maximum NDVI for the season.
 
 ```{r, eval=FALSE}
 districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
@@ -30,9 +32,9 @@ maskr <- dir("external/data/cropland/", pattern = ".tif", full.names = TRUE)
 
 
 ### Pre-processing
-  The districts data did not need much pre-processing, as it was already in a good format and was only used for a background for displaying the other data. We did later rasterize the districts data in order to aggregate cell-level data up to district level for ease of interpretation.
+The districts data did not need much pre-processing, as it was already in a good format and was only used for a background for displaying the other data. We did later rasterize the districts data in order to aggregate cell-level data up to district level for ease of interpretation.
 
-  The mask data required a bit of preprocessing.  First, the original TIFF data file was uploaded into the R environment, rasterized, and reprojected to the extent and resolution of the planting and harvesting data.  After this, the values of 0 within the crop_mask file were converted to NA values, finishing its preprocessing and readying it for use in analysis.
+The mask data required a bit of preprocessing. First, the original TIFF data file was uploaded into the R environment, rasterized, and projected to the extent and resolution of the planting and harvesting data. After this, the values of 0 within the crop_mask file were converted to NA values, finishing its preprocessing and readying it for use in analysis.
 ```{r, eval=FALSE}
 plant1_ras <- raster(plant[[1]])
 maskr <- raster("external/data/cropland/CropZmb1V1_2015_16_fullagree.tif")
@@ -44,7 +46,7 @@ crop_mask[crop_mask == 0] <- NA
 ```
 
 
-  The planting and harvesting data did require a fair amount of pre-processing, especially given the size of the files. We took in the files as a list of file paths and then ran them through an `lapply` statement which rasterized each file, turned the 0 values into NA values, masked the data to the cropland areas, and then put each file into a stack. These stacks were then saved as TIFF and RDA files for easy access during the analysis.
+The planting and harvesting data did require a fair amount of pre-processing, especially given the size of the files. We took in the files as a list of file paths and then ran them through an `lapply` statement which rasterized each file, turned the 0 values into NA values, masked the data to the cropland areas, and then put each file into a stack. These stacks were then saved as TIFF and RDA files for easy access during the analysis.
 ```{r, eval=FALSE}
 #plant_ras <- lapply(plant, raster)
 plant_ras <- lapply(plant, function(x) {  # x <- 1
@@ -82,15 +84,13 @@ if(!canProcessInMemory(harv_ras)) {
 ```
 
 ### Planting and Harvesting Mean Analysis
-
+The RasterBrick files of the seasons' planting and harvesting dates were respectively run through a mean calculation, resulting in a single output raster containing the mean planting and harvesting dates across all eighteen seasons. Following this calculation, the date values within each output raster were converted to Julian date values.  
 ```{r, eval = FALSE}
 plantbrick <- brick("external/data/plantbrick.tif")
 plant_mean <- plantbrick %>% calc(., mean)
-rm(plant_ras)
 
 harvbrick <- brick("external/data/harvestbrick.tif")
 harv_mean <-  harvbrick %>% calc(., mean)
-rm(harv_ras)
 
 plant_rasnegative <- (plant_mean > 365) * -365
 plant_mean_corrected <- plant_mean + plant_rasnegative
@@ -99,7 +99,8 @@ harv_rasnegative <- (harv_mean > 365) * -365
 harv_mean_corrected <- harv_mean + harv_rasnegative
 ```
 
-```{r}
+To aggregate the mean planting and harvesting dates across districts, we rasterized and projected the Zambia district data from the Geospaar package. The mean planting and harvesting dates within each district were then calculated using the zonal statistics function. The tabular outputs of each zonal function were then respectively converted to data frames and converted back to spatial data through the subs function using the raster districts as the target layer.
+```{r, eval = FALSE}
 zamr <- raster(x = extent(districts), crs = crs(districts), res = 0.1)
 values(zamr) <- 1:ncell(zamr)
 districts <- districts %>% mutate(ID = 1:nrow(.))
@@ -130,7 +131,7 @@ distr_slmu <- slength_zonemu %>% data.frame %>% select(1:2) %>%
   subs(x = distsr_rs, y = ., by = "zone")
 ```
 
-# Results
+# Results (200-400 words)
 ### Planting and Harvesting Mean
 ```{r, eval = FALSE}
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
@@ -165,7 +166,7 @@ plot(distr_slmu, main = "Mean Season Length",
 ```
 
 
-# Discussion
+# Discussion (200-400 words)
 
 
 
