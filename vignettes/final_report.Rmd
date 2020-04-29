@@ -15,7 +15,7 @@ The agricultural industry is essential to the culture and economy of many countr
 
 # Methods (~250 words)
 ### Import Data
-Our data was acquired from three different sources. Our districts data came from our professor, Lyndon Estes, via the Geospaar package. Our crop_mask data came from the plantingdatecv repository in the previous year's agroimpacts group. Our phenology data for Zambia came from Sitian Xiong,contaniing 18 seasons of data from the years of 2000 to 2018.  The planting dates were calculated when the NDVI curve reached 30% of the maximum NDVI for the season, and harvesting dates when the NDVI curve decreased 70% from the maximum NDVI for the season.
+Our data was acquired from three different sources. Our districts data came from our professor, Lyndon Estes, via the Geospaar package. Our crop_mask data came from the plantingdatecv repository in the previous year's agroimpacts group. Our phenology data for Zambia came from Sitian Xiong,contaniing 18 seasons of data from the years of 2000 to 2018. The planting dates were calculated when the NDVI curve reached 30% of the maximum NDVI for the season, and harvesting dates when the NDVI curve decreased 70% from the maximum NDVI for the season.
 
 ```{r, eval=FALSE}
 districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
@@ -142,7 +142,7 @@ plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
 plot(harv_mean_corrected, axes = FALSE, box = FALSE,
      add = TRUE, col = rev(terrain.colors(10)))
 ```
-![Figure 1: This image shows the mean planting and harvesting dates in Zambia between 2000 and 2018.](C:/Users/Rowan/Documents/R/zambiags/images/datemeans.png)
+![Figure 1: This image shows the mean planting and harvesting dates in Zambia between 2000 and 2018.](../images/datemeans.png)
 
 ```{r, eval = FALSE}
 par(mfrow = c(1, 2), mar = c(0, 2, 1, 6))
@@ -151,7 +151,7 @@ plot(distr_plmu, main = "Mean Planting Date",
 plot(distr_hamu, main = "Mean Harvesting Date",
      axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
 ```
-![Figure 2: This image shows the mean planting and harvesting dates for each district in Zambia between 2000 and 2018.](C:/Users/Rowan/Documents/R/zambiags/images/distr_datemeans.png)
+![Figure 2: This image shows the mean planting and harvesting dates for each district in Zambia between 2000 and 2018.](../images/distr_datemeans.png)
 
 ### Season Length Mean
 
@@ -161,13 +161,13 @@ plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
      main = "Mean Season Length")
 plot(slength_mean, axes = FALSE, box = FALSE, add = TRUE)
 ```
-![Figure 3: This image shows the mean season length in Zambia between 2000 and 2018.](C:/Users/Rowan/Documents/R/zambiags/images/slength_pixel.png)
+![Figure 3: This image shows the mean season length in Zambia between 2000 and 2018.](../images/slength_pixel.png)
 
 ```{r, eval = FALSE}
 plot(distr_slmu, main = "Mean Season Length",
      axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
 ```
-![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](C:/Users/Rowan/Documents/R/zambiags/images/slength_dist.png)
+![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](../images/slength_dist.png)
 
 # Discussion (200-400 words)
 
