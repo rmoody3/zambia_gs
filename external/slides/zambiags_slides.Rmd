@@ -1,0 +1,97 @@
+---
+title: "Zambia Growing Season"
+subtitle: Rowan Moody & Brandon Shafer
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["default", "lucy", "middlebury-fonts", "themes/zambiags_slides.css"]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Introduction
+
+
+---
+
+# Methods
+
+- Import data
+- Pre-processing
+- Planting and Harvesting Mean Analysis
+- Season Length Mean Analysis
+
+---
+
+# Results
+
+---
+
+## Planting and Harvesting Mean
+![Figure 1: This image shows the mean planting and harvesting dates in Zambia between 2000 and 2018.](figures/datemeans.png)
+
+```{r, eval = FALSE}
+par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Planting Date")
+plot(plant_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Harvesting Date")
+plot(harv_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
+```
+
+---
+
+## Planting and Harvesting Mean by District
+
+![Figure 2: This image shows the mean planting and harvesting dates for each district in Zambia between 2000 and 2018.](figures/distr_datemeans.png)
+
+```{r, eval = FALSE}
+par(mfrow = c(1, 2), mar = c(0, 2, 1, 6))
+plot(distr_plmu, main = "Mean Planting Date",
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
+plot(distr_hamu, main = "Mean Harvesting Date",
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
+```
+---
+
+## Season Length
+![Figure 3: This image shows the mean season length in Zambia between 2000 and 2018.](figures/slength_pixel.png)
+
+```{r, eval = FALSE}
+par(mfrow = c(1, 1), mar = c(0, 2, 1, 2))
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Season Length")
+plot(slength_mean, axes = FALSE, box = FALSE, 
+     add = TRUE, col = rev(terrain.colors(10)))
+```
+---
+
+## Season Length by District
+
+![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](figures/slength_dist.png)
+
+```{r, eval = FALSE}
+par(mfrow = c(1, 1), mar = c(0, 2, 1.5, 2))
+plot(distr_slmu, main = "Mean Season Length",
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
+```
+
+
+
+
+---
+
+# Discussion
+
+- 
+
+---
+
+# Thank you
+## Have a nice summer
+
