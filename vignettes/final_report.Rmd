@@ -24,8 +24,10 @@ districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
   st_read
 
 plant <- dir("external/data/phenology/season_planting_date_30perc/",
-             full.names = TRUE)
-harv <- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
+             pattern = "season", full.names = TRUE)
+
+harv <- dir("external/data/phenology/season_end_30perc/",
+            pattern = "season", full.names = TRUE)
 
 maskr <- dir("external/data/cropland/", pattern = ".tif", full.names = TRUE)
 ```
