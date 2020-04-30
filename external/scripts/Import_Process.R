@@ -4,8 +4,9 @@ library(geospaar)
 
 #Load data
 plant <- dir("external/data/phenology/season_planting_date_30perc/",
-             full.names = TRUE)
-harv <- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
+             pattern = "season", full.names = TRUE)
+harv <- dir("external/data/phenology/season_end_30perc/",
+            pattern = "season", full.names = TRUE)
 data("crop_mask")
 districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
   st_read
