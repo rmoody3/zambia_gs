@@ -1,7 +1,7 @@
 ---
   title: "Zambia Growing Season: Final Report"
 author: "Rowan Moody & Brandon Shafer"
-date: "4/29/2020"
+date: "4/30/2020"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{zambiags_final_report}
