@@ -36,8 +36,10 @@ districts &lt;- system.file("extdata/districts.shp", package = "geospaar")%&gt;%
   st_read
 
 plant &lt;- dir("external/data/phenology/season_planting_date_30perc/",
-             full.names = TRUE)
-harv &lt;- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
+             pattern = "season", full.names = TRUE)
+
+harv &lt;- dir("external/data/phenology/season_end_30perc/",
+            pattern = "season", full.names = TRUE)
 
 maskr &lt;- raster("external/data/cropland/CropZmb1V1_2015_16_fullagree.tif")
 ```
@@ -54,7 +56,7 @@ plant1_ras &lt;- raster(plant[[1]])
 mask_proj &lt;- projectRaster(from = maskr, to = plant1_ras)
 crop_mask &lt;- reclassify(mask_proj, c(.75, 1, 1, -1, .7499, NA))
 crop_mask[crop_mask == 0] &lt;- NA
-
+#process season files
 plant_ras &lt;- lapply(plant, function(x) {  # x &lt;- 1
   r &lt;- raster(x)
   r[r &lt; 0] &lt;- NA
