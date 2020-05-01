@@ -1,7 +1,7 @@
 ---
 title: "Zambia Growing Season: Final Report"
 author: "Rowan Moody & Brandon Shafer"
-date: "4/30/2020"
+date: "5/01/2020"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{zambiags_final_report}
@@ -12,12 +12,14 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Introduction (200-400 words)
-The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for cropland area in order across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. Through the analysis of eighteen seasons we calculate the mean harvesting and planting dates as well as the mean season length, averaging the eighteen seasons by pixel and aggregating them by Zambia's districts.
+# Introduction
+The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for all cropland area in order across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. Zambia's most cultivated crop is maize, but other major crops include wheat and sorghum. Spatial trends in growing seasons can be used to understand the impact and importance of environmental and climatic variables on the agricultural industry. For countries and regions where agriculture is a major contributor to local economy and national GDP, the threats of changing climatic conditions can severely disrupt the lives and likelihoods of effected communities. 
 
-# Methods (~250 words)
+This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. Through the analysis of eighteen growing seasons between 2000 and 2018, we calculated the mean harvesting and planting dates as well as the mean season length, averaged across the eighteen seasons by pixel (resolution of 0.002245788, 0.002245788 in x, y degrees). The outputs of these operations are then aggregated by mean within Zambia's districts, allowing for easier identification of regional trends across the country.  
+
+# Methods
 ### Import Data
-Our data was acquired from three different sources. Our districts data came from our professor, Lyndon Estes, via the Geospaar package. Our crop_mask data came from the plantingdatecv repository in the previous year's agroimpacts group. Our phenology data for Zambia came from Sitian Xiong,contaniing 18 seasons of data from the years of 2000 to 2018.  The planting dates were calculated when the NDVI curve reached 30% of the maximum NDVI for the season, and harvesting dates when the NDVI curve decreased 70% from the maximum NDVI for the season.
+Our data was acquired from three different sources. Our districts data came from our professor, Lyndon Estes, via the Geospaar package. Our crop_mask data came from the plantingdatecv repository in the previous year's agroimpacts group, showing the extent of cropland area in Zambia. Our phenology data for Zambia came from Sitian Xiong, containing 18 seasons of data from the years of 2000 to 2018.  The planting dates were calculated when the NDVI curve reached 30% of the maximum NDVI for the season, and harvesting dates when the NDVI curve decreased 70% from the maximum NDVI for the season.
 
 ```{r, eval=FALSE}
 districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
@@ -128,7 +130,7 @@ distr_slmu <- slength_zonemu %>% data.frame %>% select(1:2) %>%
   subs(x = distsr_rs, y = ., by = "zone")
 ```
 
-# Results (200-400 words)
+# Results
 ### Planting and Harvesting Mean
 The output of calculating the mean planting and harvesting dates between 2000 and 2018 for cropland in Zambia is shown below (see Fig. 1). Most of the cropland area is concentrated along the southeastern portion of the Zambia, with scattered areas spread out across the rest of the country. The range of mean planting dates is between approximately 1 and 363 in Julian dates.  The range of mean harvesting dates is between approximately 26 and 161 in Julian dates.
 ```{r, eval = FALSE}
@@ -165,7 +167,7 @@ plot(slength_mean, axes = FALSE, box = FALSE,
 ```
 ![Figure 3: This image shows the mean season length in Zambia between 2000 and 2018.](../images/slength_pixel.png)
 
-The output of calculating the mean season length within the districts of Zambia is shown below (see Fig. 4). The range of mean district season lengths is between approximately 148 and 169 days. The longest season lengths occur in districts in the northern region of Zambia.
+The output of calculating the mean season length within the districts of Zambia is shown below (see Fig. 4). The range of mean district season lengths is between approximately 148 and 169 days. 
 ```{r, eval = FALSE}
 par(mfrow = c(1, 1), mar = c(0, 2, 1.5, 2))
 plot(distr_slmu, main = "Mean Season Length",
@@ -173,8 +175,7 @@ plot(distr_slmu, main = "Mean Season Length",
 ```
 ![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](../images/slength_dist.png)
 
-# Discussion (200-400 words)
-The results of our analysis clearly show spatial dependence of planting season length and latitudinal placement across Zambia. Looking at the planting data, we can see that the average planting dates are much earlier in the northern and north-western districts, while in the southern and eastern districts, planting can occur up to a month later. In the harvesting dates, this similar pattern can be seen, with the northern and northwest districts having an ealier harvesting date than the southern and eastern districts. This pattern makes sense given then variation in seasonality by latitude, with the northern districts warming up earlier in the planting season and also cooling later, allowing for a longer season compared to the southern districts. 
+# Discussion
+The results of our analysis clearly show spatial dependence of planting season length and latitudinal placement across Zambia. Looking at the planting data, we can see that the average planting dates are much earlier in the northern and north-western districts, while in the southern and eastern districts, planting can occur up to a month later. In the harvesting dates, a similar pattern can be seen, with the northern and northwest districts having an earlier harvesting date than the southern and eastern districts. This pattern makes sense given then variation in seasonality by latitude, with the northern districts warming up earlier in the planting season and cooling later, allowing for a longer season compared to the southern districts. The Muchinga Mountains that run through the southeastern region parallel to Zambia's border may be influential to the growing season length as these areas may be experiencing different environmental stressors than the rest of Zambia.
 
-For further research, it would be interesting to look at how the planting and harvesting dates and season lengths have changed over time. We can see a clear latidudinal dependance on season length, but it would be interesting to see if there has been any trends over the past 18 years and if these trends show a similar spatial pattern. In this study we also only looked at maize and how maize growing seasons are quantified, but it would be interesting to see the spatial patterns of other crops such as wheat or sorghum.
-
+For further research, it would be interesting to look at how the planting and harvesting dates and season lengths have changed over time. We can see a clear latitudinal dependence on season length, but it would be interesting to see if there have been any trends over the past 18 years and if these trends show a similar spatial pattern. Other variables could be included in the analysis to understand influencial variables on growing seasons, such as elevation and land surface temperature. In this study we only looked at how cropland and growing seasons for all crops are quantified, but it would be interesting and useful to analyze the spatial distribution patterns of specific crops, such as maize, wheat, or sorghum.
