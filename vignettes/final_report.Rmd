@@ -1,12 +1,12 @@
 ---
-  title: "Zambia Growing Season: Final Report"
+title: "Zambia Growing Season: Final Report"
 author: "Rowan Moody & Brandon Shafer"
 date: "4/30/2020"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{zambiags_final_report}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
   ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -175,5 +175,7 @@ plot(distr_slmu, main = "Mean Season Length",
 ![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](../images/slength_dist.png)
 
 # Discussion (200-400 words)
-The results of our analysis clearly show spatial dependence of planting season length and latitudinal placement across Zambia.
+The results of our analysis clearly show spatial dependence of planting season length and latitudinal placement across Zambia. Looking at the planting data, we can see that the average planting dates are much earlier in the northern and north-western districts, while in the southern and eastern districts, planting can occur up to a month later. In the harvesting dates, this similar pattern can be seen, with the northern and northwest districts having an ealier harvesting date than the southern and eastern districts. This pattern makes sense given then variation in seasonality by latitude, with the northern districts warming up earlier in the planting season and also cooling later, allowing for a longer season compared to the southern districts. 
+
+For further research, it would be interesting to look at how the planting and harvesting dates and season lengths have changed over time. We can see a clear latidudinal dependance on season length, but it would be interesting to see if there has been any trends over the past 18 years and if these trends show a similar spatial pattern. In this study we also only looked at maize and how maize growing seasons are quantified, but it would be interesting to see the spatial patterns of other crops such as wheat or sorghum.
 

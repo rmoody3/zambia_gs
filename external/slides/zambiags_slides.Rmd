@@ -13,6 +13,10 @@ output:
 
 # Introduction
 
+- Quantifying the Zambia growing season
+- Season planting and harvesting dates
+- Season length
+- Pixel and District classification
 
 ---
 
@@ -163,7 +167,11 @@ plot(distr_slmu, main = "Mean Season Length",
 
 # Discussion
 
-- 
+- Latidudinal variation of data
+  - Planting and harvesting dates and season length
+- Further research
+  - Time series analysis
+  - Analysis of other crops
 
 ---
 
