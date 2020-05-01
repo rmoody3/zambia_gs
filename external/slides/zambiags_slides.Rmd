@@ -157,8 +157,6 @@ plot(distr_slmu, main = "Mean Season Length",
 ```
 
 
-
-
 ---
 
 # Discussion
