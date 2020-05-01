@@ -29,7 +29,7 @@ plant <- dir("external/data/phenology/season_planting_date_30perc/",
 harv <- dir("external/data/phenology/season_end_30perc/",
             pattern = "season", full.names = TRUE)
 
-maskr <- dir("external/data/cropland/", pattern = ".tif", full.names = TRUE)
+maskr <- raster("external/data/cropland/CropZmb1V1_2015_16_fullagree.tif")
 ```
 
 ### Pre-processing
@@ -38,7 +38,6 @@ The districts data did not need much pre-processing, as it was already in a good
 The mask data required a bit of preprocessing. First, the original TIFF data file was uploaded into the R environment, rasterized, and projected to the extent and resolution of the planting and harvesting data. After this, the values of 0 within the crop_mask file were converted to NA values, finishing its preprocessing and readying it for use in analysis.
 ```{r, eval=FALSE}
 plant1_ras <- raster(plant[[1]])
-maskr <- raster("external/data/cropland/CropZmb1V1_2015_16_fullagree.tif")
 
 mask_proj <- projectRaster(from = maskr, to = plant1_ras)
 crop_mask <- reclassify(mask_proj, c(.75, 1, 1, -1, .7499, NA))

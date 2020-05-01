@@ -32,10 +32,12 @@ districts <- system.file("extdata/districts.shp", package = "geospaar")%>%
   st_read
 
 plant <- dir("external/data/phenology/season_planting_date_30perc/",
-             full.names = TRUE)
-harv <- dir("external/data/phenology/season_end_30perc/", full.names = TRUE)
+             pattern = "season", full.names = TRUE)
 
-maskr <- dir("external/data/cropland/", pattern = ".tif", full.names = TRUE)
+harv <- dir("external/data/phenology/season_end_30perc/",
+            pattern = "season", full.names = TRUE)
+
+maskr <- raster("external/data/cropland/CropZmb1V1_2015_16_fullagree.tif")
 ```
 ---
 
@@ -46,12 +48,10 @@ maskr <- dir("external/data/cropland/", pattern = ".tif", full.names = TRUE)
  - Rasterize, remove 0 values, & mask phenology files
 ```{r, eval=FALSE}
 plant1_ras <- raster(plant[[1]])
-
 mask_proj <- projectRaster(from = maskr, to = plant1_ras)
 crop_mask <- reclassify(mask_proj, c(.75, 1, 1, -1, .7499, NA))
-
 crop_mask[crop_mask == 0] <- NA
-
+#process season files
 plant_ras <- lapply(plant, function(x) {  # x <- 1
   r <- raster(x)
   r[r < 0] <- NA
@@ -159,8 +159,6 @@ par(mfrow = c(1, 1), mar = c(0, 2, 1.5, 2))
 plot(distr_slmu, main = "Mean Season Length",
      axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
 ```
-
-
 
 
 ---
