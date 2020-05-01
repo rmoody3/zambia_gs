@@ -4,7 +4,7 @@ author: "Rowan Moody & Brandon Shafer"
 date: "5/01/2020"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{zambiags_final_report}
+  %\VignetteIndexEntry{Final Report}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
