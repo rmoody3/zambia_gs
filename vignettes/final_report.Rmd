@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Introduction
-The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for all cropland area in order across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. Zambia's most cultivated crop is maize, but other major crops include wheat and sorghum. Spatial trends in growing seasons can be used to understand the impact and importance of environmental and climatic variables on the agricultural industry. For countries and regions where agriculture is a major contributor to local economy and national GDP, the threats of changing climatic conditions can severely disrupt the lives and likelihoods of effected communities. 
+The agricultural industry is essential to the culture and economy of many countries, making it important to understand the inner workings and trends of the industry. In Zambia, we are looking at the planting and harvesting dates for all cropland area across the past two decades to determine any spatial variation that can be seen regarding planting dates, harvesting dates, and overall season length. Zambia's most cultivated crop is maize, but other major crops include wheat and sorghum. Spatial trends in growing seasons can be used to understand the impact and importance of environmental and climatic variables on the agricultural industry. For countries and regions where agriculture is a major contributor to local economy and national GDP, the threats of changing climatic conditions can severely disrupt the lives and likelihoods of effected communities. 
 
 This project is designed to gain a better understanding of the agricultural trends in Zambia on multiple scales. Through the analysis of eighteen growing seasons between 2000 and 2018, we calculated the mean harvesting and planting dates as well as the mean season length, averaged across the eighteen seasons by pixel (resolution of 0.002245788, 0.002245788 in x, y degrees). The outputs of these operations are then aggregated by mean within Zambia's districts, allowing for easier identification of regional trends across the country.  
 
@@ -47,7 +47,7 @@ crop_mask <- reclassify(mask_proj, c(.75, 1, 1, -1, .7499, NA))
 crop_mask[crop_mask == 0] <- NA
 ```
 
-The planting and harvesting data did require a fair amount of pre-processing, especially given the size of the files. We took in the files as a list of file paths and then ran them through an `lapply` statement which rasterized each file, turned the 0 values into NA values, masked the data to the cropland areas, and then put each file into a stack. These stacks were then saved as TIFF and RDA files for easy access during the analysis.
+The planting and harvesting data did require a fair amount of pre-processing, especially given the size of the files. We took in the files as a list of file paths and then ran them through an `lapply` statement which rasterized each file, turned the 0 values into NA values, masked the data to the cropland areas before putting each file into a brick. These bricks were then saved as TIFF and RDA files for easy access during the analysis.
 ```{r, eval=FALSE}
 #plant_ras <- lapply(plant, raster)
 plant_ras <- lapply(plant, function(x) {  # x <- 1
@@ -85,7 +85,7 @@ if(!canProcessInMemory(harv_ras)) {
 ```
 
 ### Planting and Harvesting Mean Analysis
-The RasterBrick files of the seasons' planting and harvesting dates were respectively run through a mean calculation, resulting in a single output raster containing the mean planting and harvesting dates across all eighteen seasons. Following this calculation, the date values within each output raster were converted to Julian date values via a two-step mask for values greater than 365.
+The RasterBrick files of the seasons' planting and harvesting dates were respectively run through a mean calculation, resulting in output raster lifes containing the mean planting and harvesting dates across all eighteen seasons. Following this calculation, the date values within each output raster were converted to Julian date values via a two-step mask for values greater than 365.
 ```{r, eval = FALSE}
 plantbrick <- brick("external/data/plantbrick.tif")
 plant_mean <- plantbrick %>% calc(., mean)
@@ -100,7 +100,7 @@ harv_rasnegative <- (harv_mean > 365) * -365
 harv_mean_corrected <- harv_mean + harv_rasnegative
 ```
 
-To aggregate the mean planting and harvesting dates across districts, we rasterized and projected the Zambia district data from the Geospaar package. The mean planting and harvesting dates within each district were then calculated using the `zonal` statistical function. The tabular outputs of each mean operation were then respectively converted to data frames and converted back to spatial data through the subs function using the raster districts as the target layer.
+To aggregate the mean planting and harvesting dates across districts, we rasterized and projected the Zambia district data from the Geospaar package. The mean planting and harvesting dates within each district were then calculated using the `zonal` statistics function. The tabular outputs for each mean operation were then respectively converted to data frames and converted back to spatial data through the subs function using the raster districts file as the target layer.
 ```{r, eval = FALSE}
 zamr <- raster(x = extent(districts), crs = crs(districts), res = 0.1)
 values(zamr) <- 1:ncell(zamr)
