@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Zambia Growing Season</title>
+    <meta charset="utf-8" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/lucy.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/middlebury-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="themes\zambiags_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Zambia Growing Season
+## Rowan Moody &amp; Brandon Shafer
+
+---
+
+
+# Introduction
+
+
+---
+
+# Data Sources
+
+- Import data
+ - Zambia districts vector shapefile
+ - Phenology TIFF files
+ - Cropland mask TIFF file
+
+
+```r
+districts &lt;- system.file("extdata/districts.shp", package = "geospaar")%&gt;%
+  st_read
+
+plant &lt;- dir("external/data/phenology/season_planting_date_30perc/",
+             pattern = "season", full.names = TRUE)
+
+harv &lt;- dir("external/data/phenology/season_end_30perc/",
+            pattern = "season", full.names = TRUE)
+
+maskr &lt;- raster("external/data/cropland/CropZmb1V1_2015_16_fullagree.tif")
+```
+---
+
+# Methods
+
+- Data pre-processing
+ - Reproject cropland mask file to phenology files
+ - Rasterize, remove 0 values, &amp; mask phenology files
+
+```r
+plant1_ras &lt;- raster(plant[[1]])
+mask_proj &lt;- projectRaster(from = maskr, to = plant1_ras)
+crop_mask &lt;- reclassify(mask_proj, c(.75, 1, 1, -1, .7499, NA))
+crop_mask[crop_mask == 0] &lt;- NA
+#process season files
+plant_ras &lt;- lapply(plant, function(x) {  # x &lt;- 1
+  r &lt;- raster(x)
+  r[r &lt; 0] &lt;- NA
+  r &lt;- mask(x = r, mask = crop_mask)
+  # plot(r)
+  return(r)
+})
+plant_ras &lt;- stack(plant_ras)
+#save stack output as brick on disk
+if(!canProcessInMemory(plant_ras)) {
+  plantbrick &lt;- brick(x = plant_ras, filename = "external/data/plantbrick.tif")
+} else {
+  plantbrick &lt;- brick(plant_ras)
+  save(plantbrick, file = "data/plantbrick.rda")
+}
+```
+---
+
+## Mean Date Analysis
+
+- Planting/harvesting dates
+ - Calculate mean planting/harvesting dates across all seasons
+ - Aggregate results by mean date within districts
+
+```r
+#mean planting date across seasons
+plantbrick &lt;- brick("external/data/plantbrick.tif")
+plant_mean &lt;- plantbrick %&gt;% calc(., mean)
+
+plant_rasnegative &lt;- (plant_mean &gt; 365) * -365
+plant_mean_corrected &lt;- plant_mean + plant_rasnegative
+
+#aggregate across districts
+plant_zonemu &lt;- zonal(x = plant_mean_corrected, z = distsr_rs, fun = "mean")
+
+distr_plmu &lt;- plant_zonemu %&gt;% data.frame %&gt;% select(1:2) %&gt;%
+  subs(x = distsr_rs, y = ., by = "zone")
+```
+---
+
+## Mean Length Analysis
+
+- Season length
+ - Calculate mean season length between planting and harvesting dates
+ - Aggregate results by mean length within districts
+ 
+
+```r
+#mean season length
+slength &lt;- overlay((365 + harvbrick), plantbrick,
+                   fun = function(b1, b2){return(b1 - b2)})
+```
+
+---
+
+# Results
+
+---
+
+## Planting and Harvesting Mean
+![Figure 1: This image shows the mean planting and harvesting dates in Zambia between 2000 and 2018.](figures/datemeans.png)
+
+
+```r
+par(mfrow = c(1, 2), mar = c(0, 2, 1, 5))
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Planting Date")
+plot(plant_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Harvesting Date")
+plot(harv_mean_corrected, axes = FALSE, box = FALSE,
+     add = TRUE, col = rev(terrain.colors(10)))
+```
+
+---
+
+## Planting and Harvesting Mean by District
+![Figure 2: This image shows the mean planting and harvesting dates for each district in Zambia between 2000 and 2018.](figures/distr_datemeans.png)
+
+
+```r
+par(mfrow = c(1, 2), mar = c(0, 2, 1, 6))
+plot(distr_plmu, main = "Mean Planting Date",
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
+plot(distr_hamu, main = "Mean Harvesting Date",
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
+```
+---
+
+## Season Length
+![Figure 3: This image shows the mean season length in Zambia between 2000 and 2018.](figures/slength_pixel.png)
+
+
+```r
+par(mfrow = c(1, 1), mar = c(0, 2, 1, 2))
+plot(st_geometry(districts), col = "lightgrey", reset = FALSE,
+     main = "Mean Season Length")
+plot(slength_mean, axes = FALSE, box = FALSE, 
+     add = TRUE, col = rev(terrain.colors(10)))
+```
+---
+
+## Season Length by District
+
+![Figure 4: This image shows the mean season length for each district in Zambia between 2000 and 2018.](figures/slength_dist.png)
+
+
+```r
+par(mfrow = c(1, 1), mar = c(0, 2, 1.5, 2))
+plot(distr_slmu, main = "Mean Season Length",
+     axes = FALSE, box = FALSE, col = rev(terrain.colors(10)))
+```
+
+
+
+
+---
+
+# Discussion
+
+- 
+
+---
+
+# Thank you
+## Have a nice summer
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
