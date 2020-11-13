@@ -15,7 +15,7 @@ install_github("rmoody3/zambia_gs", build_vignettes = TRUE)
 browseVignettes("zambiags")
 ```
 
-To view the slides used in presenting this projcet, follow the external/slides folder path.
+To view the slides used in presenting this project, follow the external/slides folder path.
 
 To access the Phenology data used in this analysis, follow the link below.  
 https://airg.app.box.com/s/6cvc4cb4h4d0b1iny5jlmzbxk1phako3
