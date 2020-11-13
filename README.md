@@ -11,7 +11,7 @@ To build the Final Report vignette, run the following code in R.
 
 ```{r}
 library(devtools)
-install_github("agroimpacts/zambiags", build_vignettes = TRUE)
+install_github("rmoody3/zambia_gs", build_vignettes = TRUE)
 browseVignettes("zambiags")
 ```
 
